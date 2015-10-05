@@ -1,13 +1,24 @@
 package api
 
 import (
-"fmt"
+	"fmt"
+	"log"
 	"net/http"
 	"strings"
+	"text/template"
 )
 
 func IndexHandler(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprintf(w, "Hello Aakash")	
+	log.Println("New handler called")
+	t := template.New("new.html")
+	t.ParseFiles("web/templates/new.html")
+	t.Execute(w, t)
+
+}
+
+func SaveHandler(w http.ResponseWriter, r *http.Request) {
+	log.Println("Save handler called")
+	fmt.Fprintf(w, "Succes")
 }
 
 // CORS adds the necessary headres to the provided handler,

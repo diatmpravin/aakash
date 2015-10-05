@@ -16,6 +16,7 @@ func init() {
 func NewRouter() http.Handler {
 	router := mux.NewRouter()
 	router.HandleFunc("/", api.IndexHandler)
+	router.HandleFunc("/save", api.SaveHandler)
 
 	return api.CORS(router)
 }
