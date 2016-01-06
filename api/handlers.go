@@ -1,24 +1,20 @@
 package api
 
 import (
-	"fmt"
-	"log"
 	"net/http"
 	"strings"
 	"text/template"
 )
 
-func IndexHandler(w http.ResponseWriter, r *http.Request) {
-	log.Println("New handler called")
-	t := template.New("new.html")
-	t.ParseFiles("web/templates/new.html")
+// custom template delimiters since the Go default delimiters clash
+// with Angular's default.
+var templateDelims = []string{"{{%", "%}}"}
+
+func LoginHandler(w http.ResponseWriter, r *http.Request) {
+	t := template.New("login.html")
+	t.Delims(templateDelims[0], templateDelims[1])
+	t.ParseFiles("web/pages/login.html")
 	t.Execute(w, t)
-
-}
-
-func SaveHandler(w http.ResponseWriter, r *http.Request) {
-	log.Println("Save handler called")
-	fmt.Fprintf(w, "Succes")
 }
 
 // CORS adds the necessary headres to the provided handler,
