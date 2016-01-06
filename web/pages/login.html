@@ -37,18 +37,16 @@
                         <h3 class="panel-title">Please Sign In</h3>
                     </div>
                     <div ng-app="loginApp" ng-controller="LoginController as lgCtrl" class="panel-body">    
-                        <form role="form" ng-submit="postCtrl.postForm()">
+                        <form role="form" ng-submit="lgCtrl.postForm()">
                             <fieldset>
                                 <div class="form-group">
-                                    <input class="form-control" placeholder="User Name" type="username" required autofocus ng-model="username">
+                                    <input class="form-control" placeholder="User Name" type="username" required autofocus ng-model="lgCtrl.inputData.username">
                                 </div>
                                 <div class="form-group">
-                                    <input class="form-control" placeholder="Password" type="password" required ng-model="password">
-                                </div>                       
-                                <a href="index.html" class="btn btn-lg btn-success btn-block">Login</a>
+                                    <input class="form-control" placeholder="Password" type="password" required ng-model="lgCtrl.inputData.password">
+                                </div>
+                                <button class="btn btn-lg btn-success btn-block" type="submit">Login</button>
                             </fieldset>
-                            <br>
-                            Full Name: {{username + " " + password}}
                         </form>
                     </div>
                 </div>
@@ -70,13 +68,14 @@
 
     <!-- Angular.js -->
     <script>
-		(function(){
-            var app = angular.module('loginApp', []);
-            app.controller("LoginController", function($scope){
-                $scope.username= "Pravin";
-                $scope.password= "Test";
-            });
-        })();
+        angular.module('loginApp', [])
+        .controller('LoginController', ['$scope', '$window', function($scope, $window) {
+            this.postForm = function() {
+                var encodedString = '{"email":"'+this.inputData.username+'","password":"'+this.inputData.password+'"}';
+                $window.alert(encodedString);
+            }
+        }]);
+
 	</script>
 
 </body>
