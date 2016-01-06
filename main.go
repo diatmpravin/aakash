@@ -18,6 +18,10 @@ func NewRouter() http.Handler {
 
 	// Login handlers
 	router.HandleFunc("/", api.LoginHandler)
+	router.HandleFunc("/session/dashboard", api.DashboardHandler)
+
+	// Session handlers
+	router.HandleFunc("/session/new", api.SessionHandler)
 
 	return api.CORS(router)
 }

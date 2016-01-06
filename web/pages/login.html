@@ -36,18 +36,25 @@
                     <div class="panel-heading">
                         <h3 class="panel-title">Please Sign In</h3>
                     </div>
-                    <div ng-app="loginApp" ng-controller="LoginController as lgCtrl" class="panel-body">    
-                        <form role="form" ng-submit="lgCtrl.postForm()">
-                            <fieldset>
-                                <div class="form-group">
-                                    <input class="form-control" placeholder="User Name" type="username" required autofocus ng-model="lgCtrl.inputData.username">
-                                </div>
-                                <div class="form-group">
-                                    <input class="form-control" placeholder="Password" type="password" required ng-model="lgCtrl.inputData.password">
-                                </div>
-                                <button class="btn btn-lg btn-success btn-block" type="submit">Login</button>
-                            </fieldset>
-                        </form>
+                    <div ng-app="loginApp" ng-controller="LoginController as lgCtrl" class="panel-body">    <div  ng-if="notlogged">
+                            <form role="form" ng-submit="lgCtrl.postForm()">
+                                <fieldset>
+                                    <div class="form-group">
+                                        <input class="form-control" placeholder="User Name" type="username" required autofocus ng-model="lgCtrl.inputData.username">
+                                    </div>
+                                    <div class="form-group">
+                                        <input class="form-control" placeholder="Password" type="password" required ng-model="lgCtrl.inputData.password">
+                                    </div>
+                                    <div class="alert alert-danger" role="alert" ng-show="errorMsg">
+                                        <span ng-bind="errorMsg"></span>
+                                    </div>
+                                    <button class="btn btn-lg btn-success btn-block" type="submit">Login</button>
+                                </fieldset>
+                            </form>
+                        </div>
+                        <div  ng-if="gotodash" class="col-md-3 col-sm-6 hero-feature">
+                            <h4>Welcome User! <br/>View Your <a href="http://localhost:8081/session/afterlogin">Dashboard</a></h4>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -69,10 +76,38 @@
     <!-- Angular.js -->
     <script>
         angular.module('loginApp', [])
-        .controller('LoginController', ['$scope', '$window', function($scope, $window) {
+        .controller('LoginController', ['$scope', '$window', '$http', function($scope, $window, $http) {
+            
+            $scope.notlogged = true;
+            $scope.gotodash = false;
+            if(angular.isDefined($window.sessionStorage.token))
+            {
+                $scope.notlogged = false;
+                $scope.gotodash = true;
+            }
+
             this.postForm = function() {
                 var encodedString = '{"email":"'+this.inputData.username+'","password":"'+this.inputData.password+'"}';
-                $window.alert(encodedString);
+
+                $http({
+                    method: 'POST',
+                    url: 'http://localhost:8081/session/new',
+                    data: encodedString,
+                    headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+                })
+                .success(function(data, status, headers, config) {
+                    console.log(data);              
+                    var tok = angular.fromJson(data).sessionid;
+                    if (tok != null) {
+                        $window.sessionStorage.token = tok;
+                        window.location.href = 'http://localhost:8081/session/dashboard';
+                    } else {
+                        $scope.errorMsg = "Login not correct";
+                    }
+                })
+                .error(function(data, status, headers, config) {
+                    $scope.errorMsg = data;
+                })
             }
         }]);
 

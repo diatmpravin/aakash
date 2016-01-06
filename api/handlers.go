@@ -1,6 +1,7 @@
 package api
 
 import (
+	"github.com/diatmpravin/gagan/commands"
 	"net/http"
 	"strings"
 	"text/template"
@@ -14,6 +15,21 @@ func LoginHandler(w http.ResponseWriter, r *http.Request) {
 	t := template.New("login.html")
 	t.Delims(templateDelims[0], templateDelims[1])
 	t.ParseFiles("web/pages/login.html")
+	t.Execute(w, t)
+}
+
+// SessionHandler handle the session request of GET, POST, DELETE etc.
+func SessionHandler(w http.ResponseWriter, r *http.Request) {
+	switch r.Method {
+	case "POST":
+		commands.SessionPostCase(w, r)
+	}
+}
+
+func DashboardHandler(w http.ResponseWriter, r *http.Request) {
+	t := template.New("index.html")
+	t.Delims(templateDelims[0], templateDelims[1])
+	t.ParseFiles("web/pages/index.html")
 	t.Execute(w, t)
 }
 
