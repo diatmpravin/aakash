@@ -37,13 +37,17 @@ func main() {
 	// CSS
 	http.HandleFunc("/bower_components/bootstrap/dist/css/", serveResource)
 	http.HandleFunc("/bower_components/font-awesome/css/", serveResource)
+	http.HandleFunc("/bower_components/font-awesome/fonts/", serveResource)
 	http.HandleFunc("/bower_components/metisMenu/dist/", serveResource)
+	http.HandleFunc("/bower_components/morrisjs/", serveResource)
 	http.HandleFunc("/dist/css/", serveResource)
 
 	// Jquery
 	http.HandleFunc("/bower_components/jquery/dist/", serveResource)
+	http.HandleFunc("/bower_components/raphael/", serveResource)
 	http.HandleFunc("/bower_components/bootstrap/dist/js/", serveResource)
 	http.HandleFunc("/dist/js/", serveResource)
+	http.HandleFunc("/js/", serveResource)
 
 	if err := http.ListenAndServe("0.0.0.0:8081", nil); err != nil {
 		log.Fatalf("ListenAndServe", err)
