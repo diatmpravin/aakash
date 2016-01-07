@@ -99,7 +99,7 @@
                     console.log(data);              
                     var tok = angular.fromJson(data).sessionid;
                     if (tok != null) {
-                        $window.sessionStorage.token = tok;
+                        $window.sessionStorage.sessionid = tok;
                         window.location.href = 'http://localhost:8081/session/dashboard';
                     } else {
                         $scope.errorMsg = "Login not correct";

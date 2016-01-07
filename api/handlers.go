@@ -1,11 +1,23 @@
 package api
 
 import (
+	"github.com/diatmpravin/gagan/api"
 	"github.com/diatmpravin/gagan/commands"
+	"github.com/diatmpravin/gagan/configuration"
+	"github.com/diatmpravin/gagan/requirements"
 	"net/http"
 	"strings"
 	"text/template"
 )
+
+// var configRepo = configuration.NewConfigurationDiskRepository()
+var config = configuration.GetDefaultConfig()
+
+var repoLocator = api.NewRepositoryLocator(config)
+var cmdFactory = commands.NewFactory(repoLocator)
+
+var reqFactory = requirements.NewFactory(repoLocator)
+var cmdRunner = commands.NewRunner(reqFactory)
 
 // custom template delimiters since the Go default delimiters clash
 // with Angular's default.
@@ -31,6 +43,18 @@ func DashboardHandler(w http.ResponseWriter, r *http.Request) {
 	t.Delims(templateDelims[0], templateDelims[1])
 	t.ParseFiles("web/pages/index.html")
 	t.Execute(w, t)
+}
+
+// OrgsHandler handle the org request of GET, POST, DELETE etc.
+func OrgsHandler(w http.ResponseWriter, r *http.Request) {
+	switch r.Method {
+	case "POST":
+		switch r.URL.Path {
+		case "/listallorganizations":
+			cmd := cmdFactory.NewOrganizationList()
+			cmdRunner.Run(w, r, cmd)
+		}
+	}
 }
 
 // CORS adds the necessary headres to the provided handler,

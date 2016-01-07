@@ -27,9 +27,13 @@
 
     <!-- Custom Fonts -->
     <link href="../bower_components/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+    <!-- Angular.js -->
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.4.8/angular-route.js"></script>
 </head>
 
-<body>
+<body ng-app="myDashboard" ng-controller="myCtrl">
     <div id="wrapper">
     	<!-- Navigation -->
         <nav class="navbar navbar-default navbar-static-top" role="navigation" style="margin-bottom: 0">
@@ -68,22 +72,9 @@
                 <!-- /.dropdown -->
                 <li class="dropdown">
                     <a class="dropdown-toggle" data-toggle="dropdown" href="#">
-                        <i class="fa fa-tasks fa-fw"></i> Organization <i class="fa fa-caret-down"></i>
+                        <i class="fa fa-tasks fa-fw"></i> Organizations
+                        <select  ng-model="item3" ng-options="size1.Name for size1 in names1"></select>
                     </a>
-                    <ul class="dropdown-menu dropdown-alerts">
-                        <li>
-                            <a href="#">
-                                <div> Organization 1 </div>
-                            </a>
-                        </li>
-                        <li class="divider"></li>
-                        <li>
-                            <a href="#">
-                                <div> Organization 2 </div>
-                            </a>
-                        </li>                        
-                    </ul>
-                    <!-- /.dropdown-alerts -->
                 </li>
                 <!-- /.dropdown -->
                 <li class="dropdown">
@@ -124,7 +115,6 @@
                 <div class="col-lg-12">
                     <h1 class="page-header">Dashboard</h1>
                 </div>
-                <!-- /.col-lg-12 -->
             </div>
             
             <div class="row">
@@ -211,6 +201,39 @@
 
     	<!-- Custom Theme JavaScript -->
     	<script src="../dist/js/sb-admin-2.js"></script>
+
+        <script>
+            angular.module('myDashboard', [])
+            .controller('myCtrl', ['$scope','$location', '$window', '$http', function($scope,$location,$window,$http) {
+
+                var sessionid = $window.sessionStorage.sessionid;
+                console.log(sessionid);
+
+                $scope.init  =  function() {
+                    var encodedString = '{"sessionid": '+sessionid+',"Organization": {"Name":"" ,"Guid":"" }}';
+                    console.log(encodedString);
+                    $http({
+                        method: 'POST',
+                        url: "http://localhost:8081/listallorganizations",
+                        data: encodedString,
+                        headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+                    })
+                    .success(function(data, status, headers, config) {
+                        var arrorgs = data;
+                        $scope.names1 = arrorgs;
+                        $scope["item3"] = $scope.names1[0];
+                        console.log($scope["item3"]);
+                    })
+                    .error(function(data, status, headers, config) {
+                        $scope.errorMsg = data;
+                        console.log(data);
+                    })
+                }
+
+                $scope.init();
+
+            }]);
+        </script>
 
     </div>	
 </body>

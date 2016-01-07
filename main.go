@@ -23,6 +23,9 @@ func NewRouter() http.Handler {
 	// Session handlers
 	router.HandleFunc("/session/new", api.SessionHandler)
 
+	// Organization API handlers
+	router.HandleFunc("/listallorganizations", api.OrgsHandler)
+
 	return api.CORS(router)
 }
 
