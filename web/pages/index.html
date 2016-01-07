@@ -53,14 +53,16 @@
                 <li class="dropdown">
                     <a class="dropdown-toggle" data-toggle="dropdown" href="#">
                         <i class="fa fa-tasks fa-fw"></i> Spaces
-                        <select  ng-model="spaceFirst" ng-options="itr.Name for itr in spaceJson"></select>
+                        <select  ng-model="spaceFirst" ng-options="itr.Name for itr in spaceJson">
+                            <option value="">Choose Space</option>
+                        </select>
                     </a>
                 </li>
                 <!-- /.dropdown -->
                 <li class="dropdown">
                     <a class="dropdown-toggle" data-toggle="dropdown" href="#">
                         <i class="fa fa-tasks fa-fw"></i> Organizations
-                        <select  ng-model="orgFirst" ng-options="itr.Name for itr in orgJson"></select>
+                        <select  ng-model="orgFirst" ng-options="itr.Name for itr in orgJson" ng-change="listSpaces(orgFirst.Name, orgFirst.Guid)"></select>
                     </a>
                 </li>
                 <!-- /.dropdown -->
@@ -250,6 +252,24 @@
                             $scope.appJson = "";
                             $scope.namesspace2msg = "No Applications in this Space";
                         }
+                    })
+                    .error(function(data, status, headers, config) {
+                        $scope.errorMsg = data;
+                    })
+                }
+
+                $scope.listSpaces =  function(orgName,orgUID) {
+                    var enString1 = '{"sessionid": '+sessionid+',"Organization": {"Name":"'+orgName+'" ,"Guid":"'+orgUID+'" }}';
+
+                    $http({
+                        method: 'POST',
+                        url: "http://localhost:8081/listallspaces",
+                        data: enString1,
+                        headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+                    })
+                    .success(function(data, status, headers, config) {
+                        var spaceJson = data;
+                        $scope.spaceJson = spaceJson;
                     })
                     .error(function(data, status, headers, config) {
                         $scope.errorMsg = data;
