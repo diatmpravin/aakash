@@ -52,28 +52,15 @@
                 <!-- /.dropdown -->
                 <li class="dropdown">
                     <a class="dropdown-toggle" data-toggle="dropdown" href="#">
-                        <i class="fa fa-tasks fa-fw"></i> Spaces <i class="fa fa-caret-down"></i>
+                        <i class="fa fa-tasks fa-fw"></i> Spaces
+                        <select  ng-model="spaceFirst" ng-options="itr.Name for itr in spaceJson"></select>
                     </a>
-                    <ul class="dropdown-menu dropdown-tasks">
-                        <li>
-                            <a href="#">
-                                <div> Space 1 </div>
-                            </a>
-                        </li>
-                        <li class="divider"></li>
-                        <li>
-                            <a href="#">
-                                <div> Space 2 </div>
-                            </a>
-                        </li>
-                    </ul>
-                    <!-- /.dropdown-tasks -->
                 </li>
                 <!-- /.dropdown -->
                 <li class="dropdown">
                     <a class="dropdown-toggle" data-toggle="dropdown" href="#">
                         <i class="fa fa-tasks fa-fw"></i> Organizations
-                        <select  ng-model="item3" ng-options="size1.Name for size1 in names1"></select>
+                        <select  ng-model="orgFirst" ng-options="itr.Name for itr in orgJson"></select>
                     </a>
                 </li>
                 <!-- /.dropdown -->
@@ -211,7 +198,6 @@
 
                 $scope.init  =  function() {
                     var encodedString = '{"sessionid": '+sessionid+',"Organization": {"Name":"" ,"Guid":"" }}';
-                    console.log(encodedString);
                     $http({
                         method: 'POST',
                         url: "http://localhost:8081/listallorganizations",
@@ -219,14 +205,37 @@
                         headers: {'Content-Type': 'application/x-www-form-urlencoded'}
                     })
                     .success(function(data, status, headers, config) {
-                        var arrorgs = data;
-                        $scope.names1 = arrorgs;
-                        $scope["item3"] = $scope.names1[0];
-                        console.log($scope["item3"]);
+                        var orgJson = data;
+                        $scope.orgJson = orgJson;
+                        $scope["orgFirst"] = orgJson[0];
+                        console.log($scope["orgFirst"]);
+                        $scope.listspacesinit(angular.fromJson(orgJson[0]).Name,angular.fromJson(orgJson[0]).Guid);
                     })
                     .error(function(data, status, headers, config) {
                         $scope.errorMsg = data;
                         console.log(data);
+                    })
+                }
+
+                $scope.listspacesinit =  function(orgName,orguid) {
+                    $scope.orgName  = orgName;
+                    $scope.orguid  =  orguid;
+                    var enString = '{"sessionid": '+sessionid+',"Organization": {"Name":"'+orgName+'" ,"Guid":"'+orguid+'" }}';
+
+                    $http({
+                        method: 'POST',
+                        url: "http://localhost:8081/listallspaces",
+                        data: enString,
+                        headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+                    })
+                    .success(function(data, status, headers, config) {
+                        var spaceJson = data;
+                        $scope.spaceJson = spaceJson;
+                        $scope["spaceFirst"] = $scope.spaceJson[0];
+                        console.log($scope["spaceFirst"]);
+                    })
+                    .error(function(data, status, headers, config) {
+                        $scope.errorMsg = data;
                     })
                 }
 

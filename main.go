@@ -26,6 +26,9 @@ func NewRouter() http.Handler {
 	// Organization API handlers
 	router.HandleFunc("/listallorganizations", api.OrgsHandler)
 
+	// Space API handers
+	router.HandleFunc("/listallspaces", api.SpaceHandler)
+
 	return api.CORS(router)
 }
 

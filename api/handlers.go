@@ -57,6 +57,18 @@ func OrgsHandler(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+// SpaceHandler handle the org request of GET, POST, DELETE etc.
+func SpaceHandler(w http.ResponseWriter, r *http.Request) {
+	switch r.Method {
+	case "POST":
+		switch r.URL.String() {
+		case "/listallspaces":
+			cmd := cmdFactory.NewSpaceList()
+			cmdRunner.Run(w, r, cmd)
+		}
+	}
+}
+
 // CORS adds the necessary headres to the provided handler,
 // allowing cros site requests from all hosts.
 func CORS(h http.Handler) http.Handler {
