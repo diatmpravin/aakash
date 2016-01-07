@@ -121,36 +121,20 @@
                                             <thead>
                                                 <tr>
                                                     <th>Name</th>
-                                                    <th>State</th>
-                                                    <th>Instances</th>
-                                                    <th>Memory</th>
-                                                    <th>URLs</th>
-                                                    <th>ALTER STATE</th>
-                                                    <th>ALTER INSTANCES</th>
-                                                    <th>ALTER MEMORY</th>
+                                                    <th>URL</th>
+                                                    <th>STATE</th>
+                                                    <th>INSTANCES</th>
+                                                    <th>MEMORY</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                <tr>
-                                                    <td>Demo</td>
-                                                    <td>STOPPED</td>
-                                                    <td>1</td>
-                                                    <td>256 MB</td>
-                                                    <td>demo.cf.com</td>
-                                                    <td>Start App</td>
-                                                    <td>Pick No</td>
-                                                    <td>Pick Size</td>
-                                                </tr> 
-                                                <tr>
-                                                    <td>Demo</td>
-                                                    <td>STOPPED</td>
-                                                    <td>1</td>
-                                                    <td>256 MB</td>
-                                                    <td>demo.cf.com</td>
-                                                    <td>Start App</td>
-                                                    <td>Pick No</td>
-                                                    <td>Pick Size</td>
-                                                </tr>                                               
+                                                <tr ng-repeat="apps in appJson">
+                                                    <td>{{ apps.Name }}</td>
+                                                    <td><span ng-repeat="appURL in apps.Urls">{{appURL}}</span></td>
+                                                    <td>{{ apps.State }}</td>
+                                                    <td>{{ apps.Instances }}</td>
+                                                    <td>{{ apps.Memory }} MB</td>
+                                                </tr>
                                             </tbody>
                                         </table>
                                     </div>
@@ -233,6 +217,39 @@
                         $scope.spaceJson = spaceJson;
                         $scope["spaceFirst"] = $scope.spaceJson[0];
                         console.log($scope["spaceFirst"]);
+                        $scope.listappsinit(orgName, orguid, angular.fromJson(spaceJson[0]).Name, angular.fromJson(spaceJson[0]).Guid);
+                    })
+                    .error(function(data, status, headers, config) {
+                        $scope.errorMsg = data;
+                    })
+                }
+
+                $scope.listappsinit =  function(orgName, orggUID, spaceName, spacegUID) {
+                    var enString = '{"sessionid": '+sessionid+',"Organization": {"Name":"'+orgName+'" ,"Guid":"'+orggUID+'" },"Space": {"Name":"'+spaceName+'" ,"Guid":"'+spacegUID+'" }}';
+
+                    $http({
+                        method: 'POST',
+                        url: "http://localhost:8081/listallapps",
+                        data: enString,
+                        headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+                    })
+                    .success(function(data, status, headers, config) {
+                        var appJson = data;
+                        console.log(data);
+                        if(angular.isArray(appJson))
+                        {
+                            $scope.appJson = appJson;
+                            $scope.currentorgname = orgName;
+                            $scope.currentorgguid = orggUID;
+                            $scope.currentspacename = spaceName;
+                            $scope.currentspaceguid = spacegUID;
+                            $scope.namesspace2msg = "";
+                        }
+                        else
+                        {
+                            $scope.appJson = "";
+                            $scope.namesspace2msg = "No Applications in this Space";
+                        }
                     })
                     .error(function(data, status, headers, config) {
                         $scope.errorMsg = data;

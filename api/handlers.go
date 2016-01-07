@@ -69,6 +69,18 @@ func SpaceHandler(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+// AppHandler handle the app request of GET, POST, DELETE etc.
+func AppHandler(w http.ResponseWriter, r *http.Request) {
+	switch r.Method {
+	case "POST":
+		switch r.URL.Path {
+		case "/listallapps":
+			cmd := cmdFactory.NewAllApps()
+			cmdRunner.Run(w, r, cmd)
+		}
+	}
+}
+
 // CORS adds the necessary headres to the provided handler,
 // allowing cros site requests from all hosts.
 func CORS(h http.Handler) http.Handler {

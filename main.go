@@ -29,6 +29,9 @@ func NewRouter() http.Handler {
 	// Space API handers
 	router.HandleFunc("/listallspaces", api.SpaceHandler)
 
+	// Apps API handlers
+	router.HandleFunc("/listallapps", api.AppHandler)
+
 	return api.CORS(router)
 }
 
