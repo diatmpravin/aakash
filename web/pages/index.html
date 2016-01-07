@@ -53,7 +53,7 @@
                 <li class="dropdown">
                     <a class="dropdown-toggle" data-toggle="dropdown" href="#">
                         <i class="fa fa-tasks fa-fw"></i> Spaces
-                        <select  ng-model="spaceFirst" ng-options="itr.Name for itr in spaceJson">
+                        <select  ng-model="spaceFirst" ng-options="itr.Name for itr in spaceJson" ng-change="listapps(orgName, orgUID, spaceFirst.Name, spaceFirst.Guid)">
                             <option value="">Choose Space</option>
                         </select>
                     </a>
@@ -203,10 +203,10 @@
                     })
                 }
 
-                $scope.listspacesinit =  function(orgName,orguid) {
+                $scope.listspacesinit =  function(orgName,orgUID) {
                     $scope.orgName  = orgName;
-                    $scope.orguid  =  orguid;
-                    var enString = '{"sessionid": '+sessionid+',"Organization": {"Name":"'+orgName+'" ,"Guid":"'+orguid+'" }}';
+                    $scope.orgUID  =  orgUID;
+                    var enString = '{"sessionid": '+sessionid+',"Organization": {"Name":"'+orgName+'" ,"Guid":"'+orgUID+'" }}';
 
                     $http({
                         method: 'POST',
@@ -219,7 +219,7 @@
                         $scope.spaceJson = spaceJson;
                         $scope["spaceFirst"] = $scope.spaceJson[0];
                         console.log($scope["spaceFirst"]);
-                        $scope.listappsinit(orgName, orguid, angular.fromJson(spaceJson[0]).Name, angular.fromJson(spaceJson[0]).Guid);
+                        $scope.listappsinit(orgName, orgUID, angular.fromJson(spaceJson[0]).Name, angular.fromJson(spaceJson[0]).Guid);
                     })
                     .error(function(data, status, headers, config) {
                         $scope.errorMsg = data;
@@ -270,6 +270,38 @@
                     .success(function(data, status, headers, config) {
                         var spaceJson = data;
                         $scope.spaceJson = spaceJson;
+                    })
+                    .error(function(data, status, headers, config) {
+                        $scope.errorMsg = data;
+                    })
+                }
+
+                $scope.listapps =  function(orgName, orgUID, spaceName, spacegUID) {
+                    var enString = '{"sessionid": '+sessionid+',"Organization": {"Name":"'+orgName+'" ,"Guid":"'+orgUID+'" },"Space": {"Name":"'+spaceName+'" ,"Guid":"'+spacegUID+'" }}';
+                    console.log(enString);
+                    $http({
+                        method: 'POST',
+                        url: "http://localhost:8081/listallapps",
+                        data: enString,
+                        headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+                    })
+                    .success(function(data, status, headers, config) {
+                        var appJson = data;
+                        console.log(data);
+                        if(angular.isArray(appJson))
+                        {
+                            $scope.appJson = appJson;
+                            $scope.currentorgname = orgName;
+                            $scope.currentorgguid = orggUID;
+                            $scope.currentspacename = spaceName;
+                            $scope.currentspaceguid = spacegUID;
+                            $scope.namesspace2msg = "";
+                        }
+                        else
+                        {
+                            $scope.appJson = "";
+                            $scope.namesspace2msg = "No Applications in this Space";
+                        }
                     })
                     .error(function(data, status, headers, config) {
                         $scope.errorMsg = data;
