@@ -77,6 +77,14 @@ func AppHandler(w http.ResponseWriter, r *http.Request) {
 		case "/listallapps":
 			cmd := cmdFactory.NewAllApps()
 			cmdRunner.Run(w, r, cmd)
+
+		case "/stopinganapp":
+			cmd := cmdFactory.NewStop()
+			cmdRunner.Run(w, r, cmd)
+
+		case "/startinganapp":
+			cmd := cmdFactory.NewStart()
+			cmdRunner.Run(w, r, cmd)
 		}
 	}
 }

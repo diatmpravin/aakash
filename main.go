@@ -31,6 +31,8 @@ func NewRouter() http.Handler {
 
 	// Apps API handlers
 	router.HandleFunc("/listallapps", api.AppHandler)
+	router.HandleFunc("/stopinganapp", api.AppHandler)
+	router.HandleFunc("/startinganapp", api.AppHandler)
 
 	return api.CORS(router)
 }

@@ -31,6 +31,34 @@
     <!-- Angular.js -->
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.4.8/angular-route.js"></script>
+
+    <style type="text/css">
+        .styled-button-stop {
+            -webkit-box-shadow:rgba(0,0,0,0.2) 0 1px 0 0;
+            -moz-box-shadow:rgba(0,0,0,0.2) 0 1px 0 0;
+            box-shadow:rgba(0,0,0,0.2) 0 1px 0 0;
+            border:1px solid #bebfb9;
+            border-radius:15px;
+            -moz-border-radius:5px;
+            -webkit-border-radius:5px;
+            color:#ff3333;
+            cursor:pointer;
+            padding:6px
+        }
+
+        .styled-button-start {
+            -webkit-box-shadow:rgba(0,0,0,0.2) 0 1px 0 0;
+            -moz-box-shadow:rgba(0,0,0,0.2) 0 1px 0 0;
+            box-shadow:rgba(0,0,0,0.2) 0 1px 0 0;
+            border:1px solid #bebfb9;
+            border-radius:15px;
+            -moz-border-radius:5px;
+            -webkit-border-radius:5px;
+            color:#00cc44;
+            cursor:pointer;
+            padding:6px
+        }
+    </style>>
 </head>
 
 <body ng-app="myDashboard" ng-controller="myCtrl">
@@ -127,15 +155,42 @@
                                                     <th>STATE</th>
                                                     <th>INSTANCES</th>
                                                     <th>MEMORY</th>
+                                                    <th>ALTER STATE</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
                                                 <tr ng-repeat="apps in appJson">
                                                     <td>{{ apps.Name }}</td>
                                                     <td><span ng-repeat="appURL in apps.Urls">{{appURL}}</span></td>
-                                                    <td>{{ apps.State }}</td>
+                                                    <td>
+                                                        <span ng-if="currentindex == $index && arrchangestatetemp == 'wait'" >
+                                                            <img src="http://lex-artis.net/images/dataTables/ajax-loader.gif">
+                                                        </span>
+                                                        <span ng-if="currentindex == 'temp'" ng-class="getClass(apps.State)" >
+                                                            {{ apps.State }}
+                                                        </span>
+                                                        <span ng-if="currentindex != 'temp' && currentindex == $index && arrchangestatetemp != 'wait'" ng-class="getClass(arrchangestatetemp)">
+                                                            {{arrchangestatetemp}}
+                                                        </span>
+                                                        <span ng-if="currentindex != 'temp' && currentindex != $index && appState($index)=== undefined" ng-class="getClass(apps.State)">
+                                                            {{apps.State}}
+                                                        </span>
+                                                        <span ng-if="currentindex != 'temp' && currentindex != $index && appState($index) != undefined" ng-class="getClass(appState($index))">
+                                                            {{appState($index)}}
+                                                        </span>
+                                                    </td>
                                                     <td>{{ apps.Instances }}</td>
                                                     <td>{{ apps.Memory }} MB</td>
+                                                    <td>
+                                                        <span ng-click="toggleCustom()" ng-if="apps.State == 'stopped'">
+                                                            <span ng-hide="custom"  ng-click="stopApp(apps.Name,'stop',$index)" class="styled-button-stop">stop app</span>
+                                                            <span ng-show="custom"  ng-click="startApp(apps.Name,'start',$index)" class="styled-button-start" >start app</span>
+                                                        </span>
+                                                        <span ng-click="toggleCustom()" ng-if="apps.State == 'started'">
+                                                            <span ng-show="custom"  ng-click="stopApp(apps.Name,'stop',$index)" class="styled-button-stop" >stop app</span>
+                                                            <span ng-hide="custom"  ng-click="startApp(apps.Name,'start',$index)" class="styled-button-start" >start app</span>
+                                                        </span>
+                                                    </td>
                                                 </tr>
                                             </tbody>
                                         </table>
@@ -226,8 +281,8 @@
                     })
                 }
 
-                $scope.listappsinit =  function(orgName, orggUID, spaceName, spacegUID) {
-                    var enString = '{"sessionid": '+sessionid+',"Organization": {"Name":"'+orgName+'" ,"Guid":"'+orggUID+'" },"Space": {"Name":"'+spaceName+'" ,"Guid":"'+spacegUID+'" }}';
+                $scope.listappsinit =  function(orgName, orgUID, spaceName, spacegUID) {
+                    var enString = '{"sessionid": '+sessionid+',"Organization": {"Name":"'+orgName+'" ,"Guid":"'+orgUID+'" },"Space": {"Name":"'+spaceName+'" ,"Guid":"'+spacegUID+'" }}';
 
                     $http({
                         method: 'POST',
@@ -242,7 +297,7 @@
                         {
                             $scope.appJson = appJson;
                             $scope.currentorgname = orgName;
-                            $scope.currentorgguid = orggUID;
+                            $scope.currentorguid = orgUID;
                             $scope.currentspacename = spaceName;
                             $scope.currentspaceguid = spacegUID;
                             $scope.namesspace2msg = "";
@@ -292,7 +347,7 @@
                         {
                             $scope.appJson = appJson;
                             $scope.currentorgname = orgName;
-                            $scope.currentorgguid = orggUID;
+                            $scope.currentorguid = orgUID;
                             $scope.currentspacename = spaceName;
                             $scope.currentspaceguid = spacegUID;
                             $scope.namesspace2msg = "";
@@ -309,6 +364,57 @@
                 }
 
                 $scope.init();
+
+                $scope["custom"] = true;
+                $scope.toggleCustom = function() {
+                    this.custom =  this.custom === false ? true: false;
+                };
+
+                $scope.appState = function(index)
+                {
+                    return $scope["arrchangestate"+index];
+                }
+
+                $scope.currentindex = "temp";
+                $scope.stopApp = function(appName,state,index){
+                    $scope.currentindex = index;
+                    $scope["arrchangestatetemp"] = "wait";
+                    var enString = '{"sessionid": '+sessionid+',"Organization": {"Name":"'+$scope.currentorgname+'" ,"Guid":"'+$scope.currentorguid+'" },"Space": {"Name":"'+$scope.currentspacename+'" ,"Guid":"'+$scope.currentspaceguid+'" }}';
+                    console.log(enString);
+                    $http({
+                        method: 'POST',
+                        url: 'http://localhost:8081/stopinganapp?appname='+appName,
+                        data: enString,
+                        headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+                    })
+                    .success(function(data, status, headers, config) {
+                        $scope["arrchangestatetemp"] = angular.lowercase(data.State);
+                        $scope["arrchangestate"+index] = angular.lowercase(data.State);
+                    })
+                    .error(function(data, status, headers, config) {
+                        $scope.errorMsg = data;
+                    })
+                }
+
+                $scope.startApp = function(appName,state,index){
+                    $scope.currentindex = index;
+                    $scope["arrchangestatetemp"] = "wait";
+                    var enString = '{"sessionid": '+sessionid+',"Organization": {"Name":"'+$scope.currentorgname+'" ,"Guid":"'+$scope.currentorguid+'" },"Space": {"Name":"'+$scope.currentspacename+'" ,"Guid":"'+$scope.currentspaceguid+'" }}';
+                    console.log(enString);
+                    $http({
+                        method: 'POST',
+                        url: 'http://localhost:8081/startinganapp?appname='+appName,
+                        data: enString,
+                        headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+                    })
+                    .success(function(data, status, headers, config) {
+                        $scope["arrchangestatetemp"] = angular.lowercase(data.State);
+                        $scope["arrchangestate"+index] = angular.lowercase(data.State);
+                    })
+                    .error(function(data, status, headers, config) {
+                        $scope.errorMsg = data;
+                    })
+                }
 
             }]);
         </script>
