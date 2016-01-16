@@ -53,7 +53,7 @@
                             </form>
                         </div>
                         <div  ng-if="gotodash" class="col-md-3 col-sm-6 hero-feature">
-                            <h4>Welcome User! <br/>View Your <a href="http://localhost:8081/session/afterlogin">Dashboard</a></h4>
+                            <h4>Welcome User! <br/>View Your <a href="/session/afterlogin">Dashboard</a></h4>
                         </div>
                     </div>
                 </div>
@@ -91,7 +91,7 @@
 
                 $http({
                     method: 'POST',
-                    url: 'http://localhost:8081/session/new',
+                    url: '/session/new',
                     data: encodedString,
                     headers: {'Content-Type': 'application/x-www-form-urlencoded'}
                 })
@@ -100,7 +100,7 @@
                     var tok = angular.fromJson(data).sessionid;
                     if (tok != null) {
                         $window.sessionStorage.sessionid = tok;
-                        window.location.href = 'http://localhost:8081/session/dashboard';
+                        window.location.href = '/session/dashboard';
                     } else {
                         $scope.errorMsg = "Login not correct";
                     }

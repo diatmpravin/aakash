@@ -35,6 +35,9 @@ func SessionHandler(w http.ResponseWriter, r *http.Request) {
 	switch r.Method {
 	case "POST":
 		commands.SessionPostCase(w, r)
+
+	case "DELETE":
+		commands.SessionDeleteCase(w, r)
 	}
 }
 

@@ -22,6 +22,7 @@ func NewRouter() http.Handler {
 
 	// Session handlers
 	router.HandleFunc("/session/new", api.SessionHandler)
+	router.HandleFunc("/session/delete", api.SessionHandler)
 
 	// Organization API handlers
 	router.HandleFunc("/listallorganizations", api.OrgsHandler)
