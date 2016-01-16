@@ -58,7 +58,7 @@
             cursor:pointer;
             padding:6px
         }
-    </style>>
+    </style>
 </head>
 
 <body ng-app="myDashboard" ng-controller="myCtrl">
@@ -96,7 +96,7 @@
                 <!-- /.dropdown -->
                 <li class="dropdown">
                     <a class="dropdown-toggle" data-toggle="dropdown" href="#">
-                        <i class="fa fa-user fa-fw"></i>  <i class="fa fa-caret-down"></i>
+                        <i class="fa fa-user fa-fw"></i>Hello {{uname.toUpperCase()}}<i class="fa fa-caret-down"></i>
                     </a>
                     <ul class="dropdown-menu dropdown-user">
                         <li><a href="#"><i class="fa fa-user fa-fw"></i> User Profile</a>
@@ -234,6 +234,10 @@
         <script>
             angular.module('myDashboard', [])
             .controller('myCtrl', ['$scope','$location', '$window', '$http', function($scope,$location,$window,$http) {
+
+                if(angular.isDefined($window.sessionStorage.sessionid))                 {
+                    $scope.uname = $window.sessionStorage.uname;
+                }
 
                 var sessionid = $window.sessionStorage.sessionid;
                 console.log(sessionid);

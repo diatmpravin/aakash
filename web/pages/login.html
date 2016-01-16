@@ -88,6 +88,7 @@
 
             this.postForm = function() {
                 var encodedString = '{"email":"'+this.inputData.username+'","password":"'+this.inputData.password+'"}';
+                var uname = this.inputData.username;
 
                 $http({
                     method: 'POST',
@@ -100,6 +101,7 @@
                     var tok = angular.fromJson(data).sessionid;
                     if (tok != null) {
                         $window.sessionStorage.sessionid = tok;
+                        $window.sessionStorage.uname = uname ;
                         window.location.href = '/session/dashboard';
                     } else {
                         $scope.errorMsg = "Login not correct";
