@@ -22,11 +22,13 @@ cd $GOPATH/
 cd $GOPATH/src/github.com/diatmpravin/aakash
 go get
 ```
-4. Run Aakash
+### Finally, you can run:
 
 ```
 go run main.go
 ```
+
+In a browser type the URL http://localhost:8001/ and you're ready to go.
 
 ## Contributing Guide
 
