@@ -17,7 +17,10 @@ You need the Go runtime to develop this project, as well as the Angular.js for d
 2. Install Redis
 3. Fork Aakash on GitHub
 4. Add your fork as a git remote
+
+```
     git remote add fork git@github.com:$USER/aakash.git
+```
 
 ### Create a Feature Branch & Code Away!
 
@@ -41,7 +44,7 @@ Once you've done all of the above & pushed your changes to your fork, you can cr
 
 ## Contributing
 
-We encourage you to contribute to Aakash! Please check out the [Contributing to Aakash guide]() for guidelines about how to proceed.
+We encourage you to contribute to Aakash! Please check out the [Contributing to Aakash guide](https://github.com/diatmpravin/aakash#contributing) for guidelines about how to proceed.
 
 ## License
 
