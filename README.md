@@ -28,7 +28,7 @@ go get
 go run main.go
 ```
 
-In a browser type the URL http://localhost:8001/ and you're ready to go.
+In a browser type the URL http://localhost:8081/ and you're ready to go.
 
 ## Contributing Guide
 
