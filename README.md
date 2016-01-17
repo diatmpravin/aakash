@@ -10,3 +10,39 @@ The project is composed for multiple components. The web server and dashboard so
 ## Development tools
 
 You need the Go runtime to develop this project, as well as the Angular.js for dashboard.
+
+## Contributing Guide
+
+1. Install Golang
+2. Install Redis
+3. Fork Aakash on GitHub
+4. Add your fork as a git remote
+    git remote add fork git@github.com:$USER/aakash.git
+
+### Create a Feature Branch & Code Away!
+
+Now that you've properly installed and forked Aakash, you are ready to start coding.
+
+In order to have your pull requests accepted, we recommend you make your changes to Aakash on a
+new git branch. For example,
+```
+$ git checkout -b new-feature                             # Create a new branch based on develop and switch to it
+$ ...                                                     # Make your changes and commit them
+$ git push fork new-feature                               # After new commits, push to your fork
+```
+
+### Format Your Code
+
+Remember to run `go fmt` before committing your changes.
+
+### Submit Pull Request
+
+Once you've done all of the above & pushed your changes to your fork, you can create a pull request for review and acceptance.
+
+## Contributing
+
+We encourage you to contribute to Aakash! Please check out the [Contributing to Aakash guide]() for guidelines about how to proceed.
+
+## License
+
+Aakash is released under the [MIT License](http://www.opensource.org/licenses/MIT).
