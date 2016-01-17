@@ -11,6 +11,23 @@ The project is composed for multiple components. The web server and dashboard so
 
 You need the Go runtime to develop this project, as well as the Angular.js for dashboard.
 
+## Getting Started
+
+1. Install Golang
+2. Install Redis
+3. Clone source code
+```
+go get github.com/diatmpravin/aakash
+cd $GOPATH/
+cd $GOPATH/src/github.com/diatmpravin/aakash
+go get
+```
+4. Run Aakash
+
+```
+go run main.go
+```
+
 ## Contributing Guide
 
 1. Install Golang
@@ -19,7 +36,7 @@ You need the Go runtime to develop this project, as well as the Angular.js for d
 4. Add your fork as a git remote
 
 ```
-    git remote add fork git@github.com:$USER/aakash.git
+git remote add fork git@github.com:$USER/aakash.git
 ```
 
 ### Create a Feature Branch & Code Away!
